@@ -4,9 +4,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Jogo {
-    private int[][] matrix;
+    private int[][] matriz;
+    private int charX;
+    private int charY;
     public Jogo(){
-        matrix = new int[10][2];
+        matriz = new int[10][2];
+        charX = 0;
+        charY = 1;
     }
     public void init(){
         createChar();
@@ -17,8 +21,8 @@ public class Jogo {
         new Thread() {
             @Override
             public void run() {
-                do{
-                    showMatrix();
+                do{       
+                    showMatriz();            
                     move();
                     createObstacle(9,new Random().nextInt(2));
                     try{
@@ -52,39 +56,49 @@ public class Jogo {
             }
           }.start();
     }
+    private void creator(){
     
-    
+    }
     private void move(){
         for(int lin = 0; lin < 2; lin++) {
             for(int col = 0; col< 9; col++ ){
-               matrix[col][lin] = matrix[col][lin] + matrix[col+1][lin];
-               matrix[col+1][lin] = 0;
+                matriz[col][lin] = matriz[col+1][lin] + matriz[col][lin];
+                matriz[col+1][lin] = 0;
             }
         }
+        if(matriz[0][0] < 2 && matriz[0][1] < 2){
+            matriz[0][0] = 0;
+            matriz[0][1] = 0;
+            createChar();
+        }
     }
-    public void showMatrix(){
+    public void showMatriz(){
         System.out.println("");
         for(int lin = 0; lin < 2; lin++) {
             for(int col = 0; col< 10; col++ ){
-                System.out.print(matrix[col][lin]);
+                System.out.print(matriz[col][lin]);
             }
             System.out.println("");
         }
     }
     private void moveUp(){
-        matrix[0][0] = 1;
-        matrix[0][1] = 0;
+        matriz[0][0] = 1;
+        matriz[0][1] = 0;
+        charX = 0;
+        charY = 0;
     }
     private void moveDown(){
-        matrix[0][1] = 1;
-        matrix[0][0] = 0;
+        matriz[0][1] = 1;
+        matriz[0][0] = 0;
+        charX = 0;
+        charY = 1;
     }   
     private void createChar(){
-        matrix[0][1] = 1;
+        matriz[charX][charY] = matriz[charX][charY]+1;
     }
     private void createObstacle(int x, int y){
-        matrix[x][y] = 1;
+        matriz[x][y] = 1;
     }
-    private boolean isCrash(){ return(matrix[0][1] == 2? true:false);}
+    private boolean isCrash(){ return(matriz[charX][charY] == 2? true:false);}
 
 }
